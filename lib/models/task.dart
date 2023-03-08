@@ -32,12 +32,7 @@ class TasksNotifier extends StateNotifier<List<Task>> {
   TasksNotifier() : super(tasksList);
 
   void addTask(Task newTask) {
-    List<Task> newState = [];
-    for (final task in state) {
-      newState.add(task);
-    }
-    newState.add(newTask);
-    state = newState;
+    state = [...state, newTask];
   }
 
   void toggle(int id) {
