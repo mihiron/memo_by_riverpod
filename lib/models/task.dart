@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @immutable
 class Task {
-  Task({
+  const Task({
     required this.id,
     required this.name,
     required this.isCompleted,
@@ -20,3 +21,35 @@ class Task {
     );
   }
 }
+
+const List<Task> tasksList = [
+  Task(id: 0, name: 'task1', isCompleted: false),
+  Task(id: 1, name: 'task2', isCompleted: false),
+  Task(id: 2, name: 'task3', isCompleted: false),
+];
+
+class TasksNotifier extends StateNotifier<List<Task>> {
+  TasksNotifier() : super(tasksList);
+
+  void addTask(Task newTask) {
+    List<Task> newState = [];
+    for (final task in state) {
+      newState.add(task);
+    }
+    newState.add(newTask);
+    state = newState;
+  }
+
+  void toggle(int id) {
+    List<Task> newState = [];
+    for (final task in state) {
+      if (task.id == id) {
+        newState.add(task.copyWith(isCompleted: !task.isCompleted));
+      }
+    }
+  }
+}
+
+final tasksProvider = StateNotifierProvider<TasksNotifier, List<Task>>((ref) {
+  return TasksNotifier();
+});
