@@ -55,14 +55,17 @@ class MyHomePage extends ConsumerWidget {
               child: ListTile(
                 title: Text(taskList[index].name),
                 onTap: () {
-                  ref.read(tasksProvider.notifier).toggle(taskList[index].id);
+                  ref.read(tasksProvider.notifier).toggleCompleted(index);
                 },
-                trailing: taskList[index].isCompleted
-                    ? const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                    : null,
+                trailing: isEditMode
+                    ? IconButton(
+                        onPressed: () {
+                          ref.read(tasksProvider.notifier).deleteTask(index);
+                        },
+                        icon: const Icon(Icons.clear))
+                    : (taskList[index].isCompleted
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : null),
               ),
             ),
         ],

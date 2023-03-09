@@ -35,16 +35,19 @@ class TasksNotifier extends StateNotifier<List<Task>> {
     state = [...state, newTask];
   }
 
-  void toggle(int id) {
-    List<Task> newState = [];
-    for (final task in state) {
-      if (task.id == id) {
-        newState.add(task.copyWith(isCompleted: !task.isCompleted));
-      } else {
-        newState.add(task);
-      }
-      state = newState;
-    }
+  void deleteTask(int index) {
+    state = List.from(state)..removeAt(index);
+  }
+
+  void toggleCompleted(int index) {
+    state = [
+      ...state.sublist(0, index),
+      Task(
+          id: state[index].id,
+          name: state[index].name,
+          isCompleted: !state[index].isCompleted),
+      ...state.sublist(index + 1),
+    ];
   }
 }
 
