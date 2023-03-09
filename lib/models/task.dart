@@ -39,6 +39,14 @@ class TasksNotifier extends StateNotifier<List<Task>> {
     state = List.from(state)..removeAt(index);
   }
 
+  void updateTask(int index, Task updateTask) {
+    state = [
+      ...state.sublist(0, index),
+      updateTask,
+      ...state.sublist(index + 1),
+    ];
+  }
+
   void toggleCompleted(int index) {
     state = [
       ...state.sublist(0, index),
