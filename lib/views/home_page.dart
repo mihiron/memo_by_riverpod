@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memo_by_riverpod/models/edit.dart';
 import 'package:memo_by_riverpod/models/task.dart';
 
 class MyHomePage extends ConsumerWidget {
@@ -8,13 +9,45 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Task> taskList = ref.watch(tasksProvider);
+    final isEditMode = ref.watch(editProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDoリスト'),
+        actions: [
+          isEditMode
+              ? IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    ref.read(editProvider.notifier).toggleEditMode();
+                  },
+                )
+              : IconButton(
+                  icon: const Icon(Icons.mode_edit),
+                  onPressed: () {
+                    ref.read(editProvider.notifier).toggleEditMode();
+                  },
+                ),
+        ],
       ),
       body: ReorderableListView(
         padding: const EdgeInsets.symmetric(horizontal: 12),
+        header: isEditMode
+            ? Card(
+                child: ListTile(
+                  title: const Text('タスクを追加'),
+                  onTap: () {},
+                ),
+              )
+            : null,
+        footer: isEditMode
+            ? Card(
+                child: ListTile(
+                  title: const Text('タスクを追加'),
+                  onTap: () {},
+                ),
+              )
+            : null,
         children: [
           for (int index = 0; index < taskList.length; index += 1)
             Card(
