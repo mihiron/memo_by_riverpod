@@ -40,7 +40,10 @@ class TasksNotifier extends StateNotifier<List<Task>> {
     for (final task in state) {
       if (task.id == id) {
         newState.add(task.copyWith(isCompleted: !task.isCompleted));
+      } else {
+        newState.add(task);
       }
+      state = newState;
     }
   }
 }

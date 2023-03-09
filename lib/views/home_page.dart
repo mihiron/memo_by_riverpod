@@ -13,15 +13,27 @@ class MyHomePage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('ToDoリスト'),
       ),
-      body: ListView(
-        children: taskList
-            .map((task) => CheckboxListTile(
-                  value: task.isCompleted,
-                  onChanged: (value) =>
-                      ref.read(tasksProvider.notifier).toggle(task.id),
-                  title: Text(task.name),
-                ))
-            .toList(),
+      body: ReorderableListView(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        children: [
+          for (int index = 0; index < taskList.length; index += 1)
+            Card(
+              key: Key('$index'),
+              child: ListTile(
+                title: Text(taskList[index].name),
+                onTap: () {
+                  ref.read(tasksProvider.notifier).toggle(taskList[index].id);
+                },
+                trailing: taskList[index].isCompleted
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : null,
+              ),
+            ),
+        ],
+        onReorder: (int oldIndex, int newIndex) {},
       ),
     );
   }
