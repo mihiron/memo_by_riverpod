@@ -34,6 +34,7 @@ class MyHomePage extends ConsumerWidget {
         header: isEditMode
             ? Card(
                 child: ListTile(
+                  leading: const Icon(Icons.add),
                   title: const Text('タスクを追加'),
                   onTap: () =>
                       showEditTaskDialog(context, AddEditMode.addFirst),
@@ -43,6 +44,7 @@ class MyHomePage extends ConsumerWidget {
         footer: isEditMode
             ? Card(
                 child: ListTile(
+                  leading: const Icon(Icons.add),
                   title: const Text('タスクを追加'),
                   onTap: () => showEditTaskDialog(context, AddEditMode.addLast),
                 ),
@@ -53,7 +55,15 @@ class MyHomePage extends ConsumerWidget {
             Card(
               key: Key('$index'),
               child: ListTile(
-                title: Text(taskList[index].name),
+                title: Text(
+                  taskList[index].name,
+                  style: taskList[index].isCompleted
+                      ? const TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.grey,
+                        )
+                      : null,
+                ),
                 onTap: () {
                   isEditMode
                       ? showEditTaskDialog(context, AddEditMode.edit,
@@ -64,7 +74,7 @@ class MyHomePage extends ConsumerWidget {
                     ? IconButton(
                         onPressed: () =>
                             ref.read(tasksProvider.notifier).deleteTask(index),
-                        icon: const Icon(Icons.clear))
+                        icon: const Icon(Icons.clear, color: Colors.red))
                     : (taskList[index].isCompleted
                         ? const Icon(Icons.check, color: Colors.green)
                         : null),
