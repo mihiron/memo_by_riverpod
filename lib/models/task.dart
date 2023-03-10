@@ -39,10 +39,13 @@ class TasksNotifier extends StateNotifier<List<Task>> {
     state = List.from(state)..removeAt(index);
   }
 
-  void updateTask(int index, Task updateTask) {
+  void updateTask(int index, String name) {
     state = [
       ...state.sublist(0, index),
-      updateTask,
+      Task(
+          id: state[index].id,
+          name: name,
+          isCompleted: state[index].isCompleted),
       ...state.sublist(index + 1),
     ];
   }

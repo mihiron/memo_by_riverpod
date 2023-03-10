@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memo_by_riverpod/models/edit.dart';
 import 'package:memo_by_riverpod/models/task.dart';
+import 'package:memo_by_riverpod/views/edit_task_dialog.dart';
 
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
@@ -36,7 +37,9 @@ class MyHomePage extends ConsumerWidget {
             ? Card(
                 child: ListTile(
                   title: const Text('タスクを追加'),
-                  onTap: () {},
+                  onTap: () {
+                    showEditTaskDialog(context, EditMode.add);
+                  },
                 ),
               )
             : null,
@@ -44,7 +47,9 @@ class MyHomePage extends ConsumerWidget {
             ? Card(
                 child: ListTile(
                   title: const Text('タスクを追加'),
-                  onTap: () {},
+                  onTap: () {
+                    showEditTaskDialog(context, EditMode.add);
+                  },
                 ),
               )
             : null,
@@ -55,7 +60,10 @@ class MyHomePage extends ConsumerWidget {
               child: ListTile(
                 title: Text(taskList[index].name),
                 onTap: () {
-                  ref.read(tasksProvider.notifier).toggleCompleted(index);
+                  isEditMode
+                      ? showEditTaskDialog(context, EditMode.edit,
+                          index: index, name: tasksList[index].name)
+                      : ref.read(tasksProvider.notifier).toggleCompleted(index);
                 },
                 trailing: isEditMode
                     ? IconButton(
