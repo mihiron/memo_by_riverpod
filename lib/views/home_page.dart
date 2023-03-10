@@ -77,7 +77,9 @@ class MyHomePage extends ConsumerWidget {
               ),
             ),
         ],
-        onReorder: (int oldIndex, int newIndex) {},
+        onReorder: (int oldIndex, int newIndex) {
+          ref.read(tasksProvider.notifier).reorderTask(oldIndex, newIndex);
+        },
       ),
     );
   }

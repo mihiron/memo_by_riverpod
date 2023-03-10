@@ -60,6 +60,14 @@ class TasksNotifier extends StateNotifier<List<Task>> {
       ...state.sublist(index + 1),
     ];
   }
+
+  void reorderTask(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final item = state.toList().removeAt(oldIndex);
+    state.toList().insert(newIndex, item);
+  }
 }
 
 final tasksProvider = StateNotifierProvider<TasksNotifier, List<Task>>((ref) {
