@@ -31,7 +31,11 @@ const List<Task> tasksList = [
 class TasksNotifier extends StateNotifier<List<Task>> {
   TasksNotifier() : super(tasksList);
 
-  void addTask(Task newTask) {
+  void addFirstTask(Task newTask) {
+    state = [newTask, ...state];
+  }
+
+  void addLastTask(Task newTask) {
     state = [...state, newTask];
   }
 
@@ -42,10 +46,7 @@ class TasksNotifier extends StateNotifier<List<Task>> {
   void updateTask(int index, String name) {
     state = [
       ...state.sublist(0, index),
-      Task(
-          id: state[index].id,
-          name: name,
-          isCompleted: state[index].isCompleted),
+      state[index].copyWith(name: name),
       ...state.sublist(index + 1),
     ];
   }
@@ -53,10 +54,7 @@ class TasksNotifier extends StateNotifier<List<Task>> {
   void toggleCompleted(int index) {
     state = [
       ...state.sublist(0, index),
-      Task(
-          id: state[index].id,
-          name: state[index].name,
-          isCompleted: !state[index].isCompleted),
+      state[index].copyWith(isCompleted: !state[index].isCompleted),
       ...state.sublist(index + 1),
     ];
   }
@@ -65,8 +63,9 @@ class TasksNotifier extends StateNotifier<List<Task>> {
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
-    final item = state.toList().removeAt(oldIndex);
-    state.toList().insert(newIndex, item);
+    final newState = List<Task>.from(state);
+    newState.insert(newIndex, newState.removeAt(oldIndex));
+    state = newState;
   }
 }
 

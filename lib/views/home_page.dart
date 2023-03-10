@@ -19,15 +19,13 @@ class MyHomePage extends ConsumerWidget {
           isEditMode
               ? IconButton(
                   icon: const Icon(Icons.check),
-                  onPressed: () {
-                    ref.read(editProvider.notifier).toggleEditMode();
-                  },
+                  onPressed: () =>
+                      ref.read(editProvider.notifier).toggleEditMode(),
                 )
               : IconButton(
                   icon: const Icon(Icons.mode_edit),
-                  onPressed: () {
-                    ref.read(editProvider.notifier).toggleEditMode();
-                  },
+                  onPressed: () =>
+                      ref.read(editProvider.notifier).toggleEditMode(),
                 ),
         ],
       ),
@@ -37,9 +35,8 @@ class MyHomePage extends ConsumerWidget {
             ? Card(
                 child: ListTile(
                   title: const Text('タスクを追加'),
-                  onTap: () {
-                    showEditTaskDialog(context, EditMode.add);
-                  },
+                  onTap: () =>
+                      showEditTaskDialog(context, AddEditMode.addFirst),
                 ),
               )
             : null,
@@ -47,9 +44,7 @@ class MyHomePage extends ConsumerWidget {
             ? Card(
                 child: ListTile(
                   title: const Text('タスクを追加'),
-                  onTap: () {
-                    showEditTaskDialog(context, EditMode.add);
-                  },
+                  onTap: () => showEditTaskDialog(context, AddEditMode.addLast),
                 ),
               )
             : null,
@@ -61,15 +56,14 @@ class MyHomePage extends ConsumerWidget {
                 title: Text(taskList[index].name),
                 onTap: () {
                   isEditMode
-                      ? showEditTaskDialog(context, EditMode.edit,
+                      ? showEditTaskDialog(context, AddEditMode.edit,
                           index: index, name: tasksList[index].name)
                       : ref.read(tasksProvider.notifier).toggleCompleted(index);
                 },
                 trailing: isEditMode
                     ? IconButton(
-                        onPressed: () {
-                          ref.read(tasksProvider.notifier).deleteTask(index);
-                        },
+                        onPressed: () =>
+                            ref.read(tasksProvider.notifier).deleteTask(index),
                         icon: const Icon(Icons.clear))
                     : (taskList[index].isCompleted
                         ? const Icon(Icons.check, color: Colors.green)

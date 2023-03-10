@@ -3,48 +3,62 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memo_by_riverpod/models/task.dart';
 
-enum EditMode {
-  add,
+enum AddEditMode {
+  addFirst,
+  addLast,
   edit,
 }
 
 class EditTaskDialog extends ConsumerWidget {
   const EditTaskDialog({
     super.key,
-    required this.editMode,
+    required this.addEditMode,
+    required this.textEditingController,
     this.index,
     this.name,
   });
 
-  final EditMode editMode;
+  final AddEditMode addEditMode;
+  final TextEditingController textEditingController;
   final int? index;
   final String? name;
 
-  factory EditTaskDialog.addTask() {
-    return const EditTaskDialog(editMode: EditMode.add);
+  factory EditTaskDialog.addFirstTask() {
+    return EditTaskDialog(
+      addEditMode: AddEditMode.addFirst,
+      textEditingController: TextEditingController(),
+    );
+  }
+
+  factory EditTaskDialog.addLastTask() {
+    return EditTaskDialog(
+      addEditMode: AddEditMode.addLast,
+      textEditingController: TextEditingController(),
+    );
   }
 
   factory EditTaskDialog.editTask(int index, String name) {
-    return EditTaskDialog(editMode: EditMode.edit, index: index, name: name);
+    return EditTaskDialog(
+      addEditMode: AddEditMode.edit,
+      textEditingController: TextEditingController(),
+      index: index,
+      name: name,
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController textEditingController = TextEditingController();
-
-    if (editMode == EditMode.edit) {
-      textEditingController.text = name!;
-    }
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
         title: (() {
-          switch (editMode) {
-            case EditMode.add:
+          switch (addEditMode) {
+            case AddEditMode.addFirst:
               return const Text('タスクを追加');
-            case EditMode.edit:
+            case AddEditMode.addLast:
               return const Text('タスクを追加');
+            case AddEditMode.edit:
+              return const Text('タスクを編集');
           }
         })(),
         content: TextField(
@@ -63,12 +77,16 @@ class EditTaskDialog extends ConsumerWidget {
           TextButton(
             onPressed: () {
               String textValue = textEditingController.text;
-              switch (editMode) {
-                case EditMode.add:
-                  ref.read(tasksProvider.notifier).addTask(
+              switch (addEditMode) {
+                case AddEditMode.addFirst:
+                  ref.read(tasksProvider.notifier).addFirstTask(
                       Task(id: 1, name: textValue, isCompleted: false));
                   break;
-                case EditMode.edit:
+                case AddEditMode.addLast:
+                  ref.read(tasksProvider.notifier).addLastTask(
+                      Task(id: 1, name: textValue, isCompleted: false));
+                  break;
+                case AddEditMode.edit:
                   ref
                       .read(tasksProvider.notifier)
                       .updateTask(index!, textValue);
@@ -86,7 +104,7 @@ class EditTaskDialog extends ConsumerWidget {
 
 Future<String?> showEditTaskDialog(
   BuildContext context,
-  EditMode editMode, {
+  AddEditMode addEditMode, {
   int? index,
   String? name,
 }) async {
@@ -94,10 +112,12 @@ Future<String?> showEditTaskDialog(
     context: context,
     barrierDismissible: false,
     builder: (_) {
-      switch (editMode) {
-        case EditMode.add:
-          return EditTaskDialog.addTask();
-        case EditMode.edit:
+      switch (addEditMode) {
+        case AddEditMode.addFirst:
+          return EditTaskDialog.addFirstTask();
+        case AddEditMode.addLast:
+          return EditTaskDialog.addLastTask();
+        case AddEditMode.edit:
           return EditTaskDialog.editTask(index!, name!);
       }
     },
