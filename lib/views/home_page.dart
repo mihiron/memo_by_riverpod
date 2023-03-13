@@ -36,8 +36,12 @@ class MyHomePage extends ConsumerWidget {
                 child: ListTile(
                   leading: const Icon(Icons.add),
                   title: const Text('タスクを追加'),
-                  onTap: () =>
-                      showEditTaskDialog(context, AddEditMode.addFirst),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (_) {
+                      return EditTaskDialog.addFirstTask();
+                    },
+                  ),
                 ),
               )
             : null,
@@ -46,7 +50,12 @@ class MyHomePage extends ConsumerWidget {
                 child: ListTile(
                   leading: const Icon(Icons.add),
                   title: const Text('タスクを追加'),
-                  onTap: () => showEditTaskDialog(context, AddEditMode.addLast),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (_) {
+                      return EditTaskDialog.addLastTask();
+                    },
+                  ),
                 ),
               )
             : null,
@@ -66,8 +75,13 @@ class MyHomePage extends ConsumerWidget {
                 ),
                 onTap: () {
                   isEditMode
-                      ? showEditTaskDialog(context, AddEditMode.edit,
-                          index: index, name: tasksList[index].name)
+                      ? showDialog(
+                          context: context,
+                          builder: (_) {
+                            return EditTaskDialog.editTask(
+                                index, taskList[index].name);
+                          },
+                        )
                       : ref.read(tasksProvider.notifier).toggleCompleted(index);
                 },
                 trailing: isEditMode

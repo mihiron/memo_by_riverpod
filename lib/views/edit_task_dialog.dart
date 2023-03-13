@@ -102,25 +102,3 @@ class EditTaskDialog extends ConsumerWidget {
     );
   }
 }
-
-Future<String?> showEditTaskDialog(
-  BuildContext context,
-  AddEditMode addEditMode, {
-  int? index,
-  String? name,
-}) async {
-  return await showDialog<String>(
-    context: context,
-    barrierDismissible: false,
-    builder: (_) {
-      switch (addEditMode) {
-        case AddEditMode.addFirst:
-          return EditTaskDialog.addFirstTask();
-        case AddEditMode.addLast:
-          return EditTaskDialog.addLastTask();
-        case AddEditMode.edit:
-          return EditTaskDialog.editTask(index!, name!);
-      }
-    },
-  );
-}
