@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memo_by_riverpod/models/task.dart';
+import 'package:memo_by_riverpod/models/tasks.dart';
 
 enum AddEditMode {
   addFirst,

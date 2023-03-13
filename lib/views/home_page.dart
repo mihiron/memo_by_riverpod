@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memo_by_riverpod/models/edit.dart';
-import 'package:memo_by_riverpod/models/task.dart';
+import 'package:memo_by_riverpod/models/tasks.dart';
 import 'package:memo_by_riverpod/views/edit_task_dialog.dart';
 
 class MyHomePage extends ConsumerWidget {
