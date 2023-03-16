@@ -219,6 +219,7 @@ class TodosCompanion extends UpdateCompanion<Todo> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final $TodosTable todos = $TodosTable(this);
+  late final TodosDao todosDao = TodosDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
