@@ -1,11 +1,12 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memo_by_riverpod/models/tasks.dart';
+import 'package:memo_by_riverpod/main.dart';
+import 'package:memo_by_riverpod/services/local/app_database.dart';
 
 enum AddEditMode {
-  addFirst,
-  addLast,
+  add,
   edit,
 }
 
@@ -14,48 +15,39 @@ class EditTaskDialog extends ConsumerWidget {
     super.key,
     required this.addEditMode,
     required this.textEditingController,
-    this.index,
-    this.name,
+    this.todo,
   });
 
   final AddEditMode addEditMode;
   final TextEditingController textEditingController;
-  final int? index;
-  final String? name;
+  final Todo? todo;
 
-  factory EditTaskDialog.addFirstTask() {
+  factory EditTaskDialog.addFTask() {
     return EditTaskDialog(
-      addEditMode: AddEditMode.addFirst,
+      addEditMode: AddEditMode.add,
       textEditingController: TextEditingController(),
     );
   }
 
-  factory EditTaskDialog.addLastTask() {
-    return EditTaskDialog(
-      addEditMode: AddEditMode.addLast,
-      textEditingController: TextEditingController(),
-    );
-  }
-
-  factory EditTaskDialog.editTask(int index, String name) {
+  factory EditTaskDialog.editTask(int index, Todo todo) {
     return EditTaskDialog(
       addEditMode: AddEditMode.edit,
       textEditingController: TextEditingController(),
-      index: index,
-      name: name,
+      todo: todo,
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localRepo = ref.read(localRepoProvider);
+    final todoRepo = localRepo.todoRepo;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
         title: (() {
           switch (addEditMode) {
-            case AddEditMode.addFirst:
-              return const Text('タスクを追加');
-            case AddEditMode.addLast:
+            case AddEditMode.add:
               return const Text('タスクを追加');
             case AddEditMode.edit:
               return const Text('タスクを編集');
@@ -77,20 +69,16 @@ class EditTaskDialog extends ConsumerWidget {
           TextButton(
             onPressed: () {
               String textValue = textEditingController.text;
-              //TODO: drift利用時にidをオートインクリメントするように修正
               switch (addEditMode) {
-                case AddEditMode.addFirst:
-                  ref.read(tasksProvider.notifier).addFirstTask(
-                      Task(id: 1, name: textValue, isCompleted: false));
-                  break;
-                case AddEditMode.addLast:
-                  ref.read(tasksProvider.notifier).addLastTask(
-                      Task(id: 1, name: textValue, isCompleted: false));
+                case AddEditMode.add:
+                  TodosCompanion newTodo = TodosCompanion(
+                    name: Value(textValue),
+                    isCompleted: const Value(false),
+                  );
+                  todoRepo.insertTodo(newTodo);
                   break;
                 case AddEditMode.edit:
-                  ref
-                      .read(tasksProvider.notifier)
-                      .updateTask(index!, textValue);
+                  todoRepo.updateTodo(todo!.copyWith(name: textValue));
                   break;
               }
               Navigator.pop(context, 'OK');
