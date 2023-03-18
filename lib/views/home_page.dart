@@ -33,12 +33,12 @@ class MyHomePage extends ConsumerWidget {
       body: todoStreamList.when(
         error: (err, _) => Text(err.toString()),
         loading: () => const Center(child: CircularProgressIndicator()),
-        data: (data) {
-          int itemCount = data.length;
+        data: (todoList) {
+          int listCount = todoList.length;
           return ListView.builder(
-            itemCount: isEditMode ? itemCount + 1 : itemCount,
+            itemCount: isEditMode ? listCount + 1 : listCount,
             itemBuilder: (context, index) {
-              if (isEditMode && index == itemCount) {
+              if (isEditMode && index == listCount) {
                 return Card(
                   child: ListTile(
                     title: const Text('タスクを追加'),
@@ -47,9 +47,7 @@ class MyHomePage extends ConsumerWidget {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
-                        builder: (_) {
-                          return EditTaskDialog.addFTask();
-                        },
+                        builder: (_) => EditTaskDialog.addFTask(),
                       );
                     },
                   ),
@@ -57,33 +55,27 @@ class MyHomePage extends ConsumerWidget {
               }
               return Card(
                 child: ListTile(
-                  title: Text(data[index].name),
+                  title: Text(todoList[index].name),
                   onTap: isEditMode
                       ? () {
                           showDialog(
                             context: context,
                             barrierDismissible: false,
-                            builder: (_) {
-                              return EditTaskDialog.editTask(
-                                  index, data[index]);
-                            },
+                            builder: (_) =>
+                                EditTaskDialog.editTask(todoList[index]),
                           );
                         }
                       : () {
-                          todoRepo.updateTodo(data[index]
-                              .copyWith(isCompleted: !data[index].isCompleted));
+                          todoRepo.updateTodo(todoList[index].copyWith(
+                              isCompleted: !todoList[index].isCompleted));
                         },
                   trailing: isEditMode
                       ? IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
-                          onPressed: () {
-                            todoRepo.deleteTodo(data[index].id);
-                          },
+                          icon: const Icon(Icons.close, color: Colors.red),
+                          onPressed: () =>
+                              todoRepo.deleteTodo(todoList[index].id),
                         )
-                      : data[index].isCompleted
+                      : todoList[index].isCompleted
                           ? const Icon(Icons.check, color: Colors.green)
                           : null,
                 ),

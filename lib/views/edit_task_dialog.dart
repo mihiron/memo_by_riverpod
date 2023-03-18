@@ -29,10 +29,10 @@ class EditTaskDialog extends ConsumerWidget {
     );
   }
 
-  factory EditTaskDialog.editTask(int index, Todo todo) {
+  factory EditTaskDialog.editTask(Todo todo) {
     return EditTaskDialog(
       addEditMode: AddEditMode.edit,
-      textEditingController: TextEditingController(),
+      textEditingController: TextEditingController(text: todo.name),
       todo: todo,
     );
   }
